@@ -40,7 +40,7 @@ accessories:
     volumes:
       - /opt/win$terthur-data:/data
   nominatim:
-    service: osrm   # Hostname = nominatim
+    service: nominatim   # Hostname = nominatim
     hosts:
       - 185.66.109.77
     image: mediagis/nominatim:4.3
