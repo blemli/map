@@ -25,8 +25,8 @@ def route_handler():
     return '', 204
 
 # Search endpoints: /search and /s
-@app.route('/search/{query}')
-@app.route('/s/{query}')
+@app.route('/search/<query>')
+@app.route('/s/<query>')
 #@cache.cached(timeout=1)
 @limiter.limit("3600 per hour")
 def search_handler(query):
