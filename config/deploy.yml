@@ -18,7 +18,7 @@ env:
   secret:
     - WEBHOST_IP
   clear:
-    NOMINATIM_URL: http://search:8080
+    NOMINATIM_URL: http://map-nominatim:8080
 
 builder:
   arch:
@@ -38,6 +38,7 @@ accessories:
     volumes:
       - /opt/winterthur-data:/data
   nominatim:
+    service: nominatim   # Hostname = nominatim
     hosts:
       - 185.66.109.77
     image: mediagis/nominatim:4.3
