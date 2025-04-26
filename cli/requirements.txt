@@ -1,0 +1,5 @@
+click==8.1.8
+folium==0.19.5
+polyline==2.0.2
+python-dotenv==1.1.0
+Requests==2.32.3

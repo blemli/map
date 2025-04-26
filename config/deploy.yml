@@ -1,0 +1,36 @@
+service: map
+image: blemli/map
+volumes:
+  - /opt/winterthur-data:/data
+servers:
+  web:
+    hosts:
+      - 185.66.109.77
+proxy:
+  ssl: true
+  host: map.problem.li
+  app_port: 5000
+registry:
+  username: blemli
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+env:
+  secret:
+    - WEBHOST_IP
+builder:
+  arch:
+    - amd64
+ssh:
+  config: true
+  port: 2022
+  user: deploy
+aliases:
+  apps: server exec docker exec kamal-proxy kamal-proxy list
+  app_version: server exec "cd /opt/map && git tag --points-at HEAD"
+accessories:
+  winterthur-extractor:
+    hosts:
+      - 185.66.109.77
+    image: blemli/winterthur-extractor
+    volumes:
+      - /opt/winterthur-data:/data

@@ -1,0 +1,30 @@
+
+
+https://download.geofabrik.de/europe/switzerland-latest.osm.pbf
+
+docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-extract -p /opt/car.lua /data/switzerland-latest.osm.pbf
+
+docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-partition /data/switzerland-latest.osrm
+
+docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-customize /data/switzerland-latest.osrm
+
+docker run -t -i -p 5000:5000 -v "${PWD}:/data" osrm/osrm-backend osrm-routed --algorithm mld /data/switzerland-latest.osrm
+
+
+
+
+
+
+
+```bash
+docker run -it \
+  -e PBF_URL=https://download.geofabrik.de/europe/switzerland-latest.osm.pbf \
+  -p 8080:8080 \
+  --name nominatim \
+  mediagis/nominatim:4.3
+```
+
+  -e REPLICATION_URL=https://download.geofabrik.de/north-america/canada/british-columbia-updates/ \
+
+
+
