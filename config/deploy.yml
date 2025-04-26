@@ -17,7 +17,6 @@ registry:
 env:
   secret:
     - WEBHOST_IP
-    env:
   clear:
     NOMINATIM_URL: http://search:8080
 
@@ -38,12 +37,13 @@ accessories:
     image: blemli/winterthur-extractor
     volumes:
       - /opt/winterthur-data:/data
-    search:
-      hosts:
-        - 185.66.109.77
-      image: mediagis/nominatim:4.3
-      volumes:
-        - /opt/winterthur-data:/nominatim/data
-      env:
-        - PBF_PATH=/nominatim/data/winterthur.osm.pbf
-      port: "8080:8080"
+  nominatim:
+    hosts:
+      - 185.66.109.77
+    image: mediagis/nominatim:4.3
+    volumes:
+      - /opt/winterthur-data:/nominatim/data
+    env:
+      clear:
+        PBF_PATH: /nominatim/data/winterthur.osm.pbf
+    port: "8080:8080"
