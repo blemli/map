@@ -65,6 +65,9 @@ kamal deploy
 
 don't be an egoist, contribute :heart:
 
+### check if acessory is running
+
+kamal accessory details winterthur-extractor
 
 
 ## links
