@@ -15,6 +15,11 @@ cache = Cache(app)
 # Rate limiter (per IP)
 limiter = Limiter(app=app, key_func=get_remote_address, default_limits=["100 per hour"])
 
+@app.route('/')
+def index():
+    #serve assets/mapli-cover.png
+    return send_file('assets/mapli-cover.png',
+                     as_attachment=False)
 # Route aliases: /route and /r
 @app.route('/route')
 @app.route('/r')
