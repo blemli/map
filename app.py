@@ -34,7 +34,7 @@ def search_handler():
         resp = requests.get(f"{os.environ['NOMINATIM_URL']}/search?q={query}&format=json&addressdetails=1&limit=1")
     except requests.RequestException as e:
         return {'error': str(e)}, 500
-return resp.json(), resp.status_code
+    return resp.json(), resp.status_code
 
 # Health check
 @app.route('/up')
