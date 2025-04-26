@@ -38,7 +38,7 @@ accessories:
       - 185.66.109.77
     image: blemli/winterthur-extractor
     volumes:
-      - /opt/winterthur-data:/data
+      - /opt/win$terthur-data:/data
   nominatim:
     service: nominatim   # Hostname = nominatim
     hosts:
@@ -51,12 +51,13 @@ accessories:
         PBF_PATH: /nominatim/data/winterthur.osm.pbf
     port: "8080:8080"
   route:
+    service: route
     hosts:
       - 185.66.109.77
     image: osrm/osrm-backend
     volumes:
       - /opt/winterthur-data:/data
-    command: >
+    cmd: >
       sh -c "
       osrm-extract -p /opt/bicycle.lua /data/winterthur.osm.pbf &&
       osrm-partition /data/winterthur.osrm &&
