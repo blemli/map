@@ -4,7 +4,7 @@ from flask import Flask, send_file
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-
+import requests
 
 app = Flask(__name__)
 
@@ -19,24 +19,25 @@ limiter = Limiter(app=app, key_func=get_remote_address, default_limits=["100 per
 @app.route('/route')
 @app.route('/r')
 @cache.cached(timeout=60)
-@limiter.limit("10 per minute")
+@limiter.limit("3600 per hour")
 def route_handler():
     # placeholder
     return '', 204
 
 # Search endpoints: /search and /s
-@app.route('/search')
-@app.route('/s')
+@app.route('/search/{query}')
+@app.route('/s/{query}')
 @cache.cached(timeout=60)
-@limiter.limit("5 per minute")
+@limiter.limit("3600 per hour")
 def search_handler():
-    # placeholder
-    return '', 204
+    resp = requests.get(f"{os.environ['NOMINATIM_URL']}/search?q={query}&format=json&addressdetails=1&limit=1")
+    return resp.json(), resp.status_code
 
 # Health check
 @app.route('/up')
 def health_check():
     return 'OK', 200
+
 
 # Serve winterthur.osm.pbf from mounted volume
 @app.route('/data/winterthur.osm.pbf')
