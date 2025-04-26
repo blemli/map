@@ -29,10 +29,11 @@ def route_handler():
 @app.route('/s/{query}')
 #@cache.cached(timeout=1)
 @limiter.limit("3600 per hour")
-def search_handler():
+def search_handler(query):
     try:
         resp = requests.get(f"{os.environ['NOMINATIM_URL']}/search?q={query}&format=json&addressdetails=1&limit=1")
     except requests.RequestException as e:
+        logging.error(f"Request failed: {e}")
         return {'error': str(e)}, 500
     return resp.json(), resp.status_code
 
