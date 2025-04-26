@@ -27,11 +27,14 @@ def route_handler():
 # Search endpoints: /search and /s
 @app.route('/search/{query}')
 @app.route('/s/{query}')
-@cache.cached(timeout=60)
+#@cache.cached(timeout=1)
 @limiter.limit("3600 per hour")
 def search_handler():
-    resp = requests.get(f"{os.environ['NOMINATIM_URL']}/search?q={query}&format=json&addressdetails=1&limit=1")
-    return resp.json(), resp.status_code
+    try:
+        resp = requests.get(f"{os.environ['NOMINATIM_URL']}/search?q={query}&format=json&addressdetails=1&limit=1")
+    except requests.RequestException as e:
+        return {'error': str(e)}, 500
+return resp.json(), resp.status_code
 
 # Health check
 @app.route('/up')
