@@ -4,7 +4,7 @@ from flask import Flask, send_file
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-import requests,os
+import requests,os,logging
 
 app = Flask(__name__)
 
