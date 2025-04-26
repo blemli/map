@@ -19,7 +19,7 @@ env:
     - WEBHOST_IP
   clear:
     NOMINATIM_URL: http://map-nominatim:8080
-    OSRM_URL: http://map-route:5001
+    OSRM_URL: http://127.0.0.1:5001
 
 builder:
   arch:
