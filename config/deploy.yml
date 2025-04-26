@@ -19,6 +19,7 @@ env:
     - WEBHOST_IP
   clear:
     NOMINATIM_URL: http://map-nominatim:8080
+    OSRM_URL: http://map-route:5001
 
 builder:
   arch:
@@ -30,6 +31,7 @@ ssh:
 aliases:
   apps: server exec docker exec kamal-proxy kamal-proxy list
   app_version: server exec "cd /opt/map && git tag --points-at HEAD"
+
 accessories:
   winterthur-extractor:
     hosts:
@@ -48,3 +50,17 @@ accessories:
       clear:
         PBF_PATH: /nominatim/data/winterthur.osm.pbf
     port: "8080:8080"
+  route:
+    hosts:
+      - 185.66.109.77
+    image: osrm/osrm-backend
+    volumes:
+      - /opt/winterthur-data:/data
+    command: >
+      sh -c "
+      osrm-extract -p /opt/bicycle.lua /data/winterthur.osm.pbf &&
+      osrm-partition /data/winterthur.osrm &&
+      osrm-customize /data/winterthur.osrm &&
+      osrm-routed --algorithm mld -p 5000 /data/winterthur.osrm
+      "
+    port: "5001:5000"
