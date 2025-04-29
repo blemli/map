@@ -18,7 +18,7 @@ env:
   secret:
     - WEBHOST_IP
   clear:
-    NOMINATIM_URL: http://map-nominatim:8080
+    NOMINATIM_URL: http://nominatim:8080
     OSRM_URL: http://osrm:5001
 
 builder:
@@ -40,7 +40,7 @@ accessories:
     volumes:
       - /opt/win$terthur-data:/data
   nominatim:
-    #service: nominatim   # Hostname = nominatim
+    service: nominatim   # Hostname = nominatim
     hosts:
       - 185.66.109.77
     image: mediagis/nominatim:4.3
@@ -51,7 +51,7 @@ accessories:
         PBF_PATH: /nominatim/data/winterthur.osm.pbf
     port: "8080:8080"
   osrm:
-    #service: osrm
+    service: osrm
     hosts:
       - 185.66.109.77
     image: osrm/osrm-backend
