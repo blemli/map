@@ -56,12 +56,12 @@ accessories:
     service: osrm
     hosts:
       - 185.66.109.77
-    image: osrm/osrm-backend
+    image: blemli/osrm-backend
     volumes:
       - /opt/winterthur-data:/data
     cmd: >
       sh -c "
-      osrm-extract -p /data/messenger.lua /data/winterthur.osm.pbf &&
+      osrm-extract -p /opt/messenger.lua /data/winterthur.osm.pbf &&
       osrm-partition /data/winterthur.osrm &&
       osrm-customize /data/winterthur.osrm &&
       osrm-routed --algorithm mld -p 5001 /data/winterthur.osrm
