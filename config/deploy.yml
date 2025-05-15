@@ -61,7 +61,7 @@ accessories:
       - /opt/winterthur-data:/data
     cmd: >
       sh -c "
-      osrm-extract -p /opt/bicycle.lua /data/winterthur.osm.pbf &&
+      osrm-extract -p /data/messenger.lua /data/winterthur.osm.pbf &&
       osrm-partition /data/winterthur.osrm &&
       osrm-customize /data/winterthur.osrm &&
       osrm-routed --algorithm mld -p 5001 /data/winterthur.osrm
