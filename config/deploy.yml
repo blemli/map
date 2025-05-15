@@ -31,6 +31,7 @@ ssh:
 aliases:
   apps: server exec docker exec kamal-proxy kamal-proxy list
   app_version: server exec "cd /opt/map && git tag --points-at HEAD"
+  ssh: app exec -i sh
 
 accessories:
   winterthur-extractor:
