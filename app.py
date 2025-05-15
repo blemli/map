@@ -10,8 +10,8 @@ import requests,os,logging
 app = Flask(__name__)
 
 # Cache config (in-memory, simple)
-app.config['CACHE_TYPE'] = 'simple'
-cache = Cache(app)
+#app.config['CACHE_TYPE'] = 'simple'
+#cache = Cache(app)
 
 # Rate limiter (per IP)
 limiter = Limiter(app=app, key_func=get_remote_address, default_limits=["100 per hour"])
