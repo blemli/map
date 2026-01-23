@@ -1,28 +1,41 @@
-# Dockerfile
-
-# Basis-Image mit Python 3.11
 FROM python:3.11-slim
 
-# Arbeitsverzeichnis
+# Install cron and required dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    libboost-dev \
+    libexpat1-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    cron \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Unbuffered stdout/stderr
-ENV PYTHONUNBUFFERED=1
+# Copy application files
+COPY . /app
 
-# Virtual Environment
-RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+# Install Python dependencies
+RUN pip install -r requirements.txt
 
-# Abhängigkeiten kopieren und installieren (inkl. pip-Upgrade)
-COPY requirements.txt .
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+# Create a wrapper script that runs the extraction once
+RUN echo '#!/bin/bash\n\
+python /app/extract-winterthur.py >> /data/extraction.log 2>&1\n\
+' > /app/run-extraction.sh && chmod +x /app/run-extraction.sh
 
-# Gesamten Anwendungscode kopieren
-COPY . .
+# Set up the cron job to run at 2 AM every day
+RUN echo "0 2 * * * root /app/run-extraction.sh" > /etc/cron.d/extraction-cron && \
+    chmod 0644 /etc/cron.d/extraction-cron && \
+    crontab /etc/cron.d/extraction-cron
 
-# Port freigeben
-EXPOSE 5000
+# Run extraction once on startup to ensure data is available immediately
+RUN echo '#!/bin/bash\n\
+echo "Running initial extraction..."\n\
+/app/run-extraction.sh\n\
+echo "Starting cron service..."\n\
+cron -f\n\
+' > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
-# Startkommando mit gunicorn (Produktivserver)
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--access-logfile", "-", "--error-logfile", "-", "app:app"]
+# Set the entrypoint to our script
+ENTRYPOINT ["/app/entrypoint.sh"]

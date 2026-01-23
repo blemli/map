@@ -54,8 +54,17 @@ is  as easy as:
 
 ```bash
 gh repo clone blemli/map && cd map
+docker build -t blemli/osrm-backend ./route/
+docker push blemli/osrm-backend
 kamal deploy
+kamal accessory reboot osrm
+kamal accessory reboot nominatim
+kamal open
 ```
+
+> [!CAUTION]
+>
+> until the extractor is working, you need to also upload the plane file: `scp route/winterthur.osm.pbf webhost:/opt/winterthur-data/`
 
 
 
@@ -70,6 +79,15 @@ kamal deploy
 nominatim replication url?
 
 
+
+## Profile improvement
+
+| From      | To               | date             | Measured | Base      | V1   |
+| --------- | ---------------- | ---------------- | -------- | --------- | ---- |
+| problemli | Ruhtalstrasse 22 | 2025-05-15 09:55 |          | 6 min 57s |      |
+|           |                  |                  |          |           |      |
+|           |                  |                  |          |           |      |
+|           |                  |                  |          |           |      |
 
 
 
@@ -125,27 +143,6 @@ osmium export -o winterthur.geojson winterthur.osm.pbf
 
  
 
-#### accessory needs to be deployed seperately
-
-```bash
-ACCESSORY="winterthur-extractor"
-cd $ACCESSORY
-docker build -t blemli/$ACCESSORY:latest .
-docker push blemli/$ACCESSORY:latest
-kamal accessory boot $ACCESSORY     # or: kamal accessory boot all
-cd ..
-kamal deploy
-kamal accessory reboot $ACCESSORY
-kamal accessory details $ACCESSORY
-kamal accessory logs $ACCESSORY
-```
-
-
-
-
-
-
-
 
 
 ## run nominatim locally for testing
@@ -159,19 +156,33 @@ docker run -it --rm \
   mediagis/nominatim:4.3
 ```
 
+test it: http://127.0.0.1:8080/search?q=cameo&addressdetails=1&limit=1
+
+> [!IMPORTANT]
+>
+> Be patient, It can take a long time until its up and running
+
 
 
 ## run osrm locally for testing
 
+[get pbf](#get-pbf-of-winterthur)
+
 ```bash
+cd route
 docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-extract -p /opt/bicycle.lua /data/winterthur.osm.pbf
-
 docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-partition /data/winterthur.osrm
-
 docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-customize /data/winterthur.osrm
-
-docker run -t -i -p 5000:5000 -v "${PWD}:/data" osrm/osrm-backend osrm-routed --algorithm mld /data/winterthur.osrm
+docker run -t -i -p 5001:5000 -v "${PWD}:/data" osrm/osrm-backend osrm-routed --algorithm mld /data/winterthur.osrm
 ```
+
+Test it: http://127.0.0.1:5001/route/v1/cycling/8.727788982270633,47.499053788622724;8.718605739005532,47.495018136217375?overview=full&geometries=geojson
+
+
+
+## run app.py locally for testing
+
+
 
 
 

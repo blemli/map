@@ -10,8 +10,8 @@ limit = require("lib/maxspeed").limit
 Measure = require("lib/measure")
 
 function setup()
-  local default_speed = 25
-  local walking_speed = 4
+  local default_speed = 36
+  local walking_speed = 6
 
   return {
     properties = {
@@ -173,6 +173,7 @@ function setup()
 
     surface_speeds = {
       asphalt = default_speed,
+      paved = default_speed,
       ["cobblestone:flattened"] = 10,
       paving_stones = 10,
       compacted = 10,

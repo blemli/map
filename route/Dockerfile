@@ -1,3 +1,3 @@
 FROM osrm/osrm-backend
 
-COPY messenger.lua /opt/messenger.lua
+COPY messenger.lua /opt/bicycle.lua
